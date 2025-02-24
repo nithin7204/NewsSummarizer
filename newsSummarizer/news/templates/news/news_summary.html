@@ -4,88 +4,129 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Summary</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#2563eb">
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f1f5f9;
+            --text-color: #1e293b;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
         body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* ✅ Ensures full visibility */
-}
-.container {
-    width: 80%;
-    max-width: 800px;
-    background-color: white;
-    padding: 25px; /* ✅ Increased padding to push content down */
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-h1 {
-    color: #333;
-    margin-bottom: 20px;
-    font-size: 24px;
-}
-p {
-    text-align: justify;
-    line-height: 1.8; /* ✅ Improved readability */
-    color: #444;
-    font-size: 16px;
-    margin: 12px 0; /* ✅ Prevents overlap */
-    padding: 12px 0; /* ✅ More breathing space */
-    overflow-wrap: break-word; /* ✅ Avoids words breaking layout */
-}
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        h1 {
+            color: var(--text-color);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        p {
+            line-height: 1.8;
+            color: var(--text-color);
+            font-size: 1rem;
+            margin: 1rem 0;
+            overflow-wrap: break-word;
+        }
 
         .error {
-            color: red;
-            font-weight: bold;
+            background-color: #fee2e2;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1rem 0;
+            font-weight: 500;
         }
+
         .btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 18px;
-            background-color: #007bff;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
-            transition: background 0.3s ease-in-out;
-            cursor: pointer;
-            font-size: 16px;
+            border-radius: 0.5rem;
+            font-weight: 500;
             border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
         }
+
         .btn:hover {
-            background-color: #0056b3;
+            background-color: var(--secondary-color);
+            transform: translateY(-1px);
         }
+
         .summary-container {
-            margin-top: 20px;
-            padding: 15px;
-            background: #eef5ff;
-            border-left: 5px solid #007bff;
-            border-radius: 8px;
-            text-align: left;
+            background-color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border-left: 4px solid var(--primary-color);
+            margin: 2rem 0;
         }
+
         .summary-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #007bff;
-            margin-bottom: 10px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
+
         .summary-text {
-            font-size: 16px;
-            color: #333;
-            line-height: 1.8; /* ✅ Same improvement for summary text */
+            color: var(--text-color);
+            line-height: 1.8;
+            font-size: 1rem;
         }
+
         .back-btn {
-            margin-top: 20px;
-            display: block;
-            font-size: 16px;
-            background-color: #28a745;
+            background-color: #10b981;
+            margin-top: 1.5rem;
         }
+
         .back-btn:hover {
-            background-color: #218838;
+            background-color: #059669;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -98,23 +139,20 @@ p {
         {% else %}
             {% if summary %}
                 <div class="summary-container">
-                    <p class="summary-title">🔍 Summarized News:</p>
+                    <p class="summary-title">🔍 Summarized News</p>
                     <p class="summary-text">{{ summary }}</p>
                 </div>
             {% else %}
-            <p>{{ full_content | linebreaks }}</p>
+                <p>{{ full_content | linebreaks }}</p>
 
-
-                <!-- Summarize Button -->
                 <form method="get">
                     <input type="hidden" name="rss_feed_url" value="{{ rss_feed_url }}">
                     <input type="hidden" name="summarize" value="true">
-                    <button type="submit" class="btn">Summarize</button>
+                    <button type="submit" class="btn">✨ Summarize</button>
                 </form>
             {% endif %}
         {% endif %}
 
-        <br>
         <a href="{% url 'news_list' %}" class="btn back-btn">🔙 Back to News</a>
     </div>
 </body>

@@ -4,83 +4,155 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Latest News</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#2563eb">
     <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f1f5f9;
+            --text-color: #1e293b;
+            --card-background: #ffffff;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        /* Dark mode variables */
+        [data-theme="dark"] {
+            --primary-color: #3b82f6;
+            --secondary-color: #60a5fa;
+            --background-color: #1a1a1a;
+            --text-color: #e5e7eb;
+            --card-background: #2d2d2d;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -2px rgb(0 0 0 / 0.2);
+        }
+
+        /* Add dark mode toggle button */
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--card-background);
+            border: none;
+            padding: 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--card-shadow);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Update existing styles for dark mode */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
             margin: 0;
-            padding: 0;
-            text-align: center;
+            padding: 2rem;
+            transition: all 0.3s ease;
         }
+
         .container {
-            width: 80%;
-            margin: auto;
-            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
+
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+            background-color: var(--card-background);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
         }
+
         .news-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
+
         .news-card {
-            background-color: #fff;
-            width: 350px;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
+            background-color: var(--card-background);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease;
         }
+
         .news-card:hover {
-            transform: scale(1.05);
+            transform: translateY(-4px);
         }
+
         .news-image {
             width: 100%;
-            height: auto;
-            border-radius: 10px;
+            height: 200px;
+            object-fit: cover;
+            background-color: #ffffff;
         }
-        .news-title {
-            font-size: 18px;
-            color: #333;
-            margin: 10px 0;
+
+        .news-image.placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--card-background);
+            color: var(--text-color);
+            font-size: 0.875rem;
         }
-        .news-meta {
-            font-size: 14px;
-            color: #777;
+
+        .news-content {
+            padding: 1.5rem;
         }
-        .read-more-btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 12px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-        .read-more-btn:hover {
-            background-color: #0056b3;
-        }
+
         .trending-btn {
-            background-color: #ff5733;
-            padding: 10px 15px;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
+            background-color: #dc2626;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
         }
-        .trending-btn:hover {
-            background-color: #cc4629;
+
+        .country-selector select {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e2e8f0;
+            background-color: var(--card-background);
+            font-size: 1rem;
+            width: 200px;
+            color: var(--text-color);
         }
-        .country-selector {
-            margin-bottom: 20px;
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .news-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .trending-insights {
+            background-color: var(--card-background);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .topic-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .topic-tag {
+            background-color: var(--background-color);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            color: var(--text-color);
         }
     </style>
     <script>
@@ -97,10 +169,37 @@
                 const selectedCountry = this.value;
                 window.location.href = `?country=${selectedCountry}`;
             });
+
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            // Check for saved theme preference or default to 'light'
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+
+            function updateThemeIcon(theme) {
+                themeToggle.innerHTML = theme === 'light' ? '🌙' : '☀️';
+                themeToggle.setAttribute('title', 
+                    theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'
+                );
+            }
         });
     </script>
 </head>
 <body>
+    <button id="theme-toggle" class="theme-toggle" title="Switch to Dark Mode">
+        🌙
+    </button>
     <div class="container">
         <div class="header">
             <h1>Latest News</h1>
@@ -116,20 +215,35 @@
             </select>
         </div>
 
+        <div class="trending-insights">
+            <h3>📈 Trending Topics</h3>
+            <div class="topic-tags">
+                <span class="topic-tag">#Technology</span>
+                <span class="topic-tag">#Politics</span>
+                <span class="topic-tag">#Science</span>
+            </div>
+        </div>
+
         <div class="news-container">
             {% for article in articles %}
             <div class="news-card">
-                <img src="{{ article.image_url }}" alt="News Image" class="news-image">
-                <h2 class="news-title">{{ article.title }}</h2>
-                <p class="news-meta"><strong>Published at:</strong> {{ article.published_at }}</p>
-                <p>{{ article.description }}</p>
-                {% if article.url %}
-                    <a href="{% url 'fetch_extended_content' %}?rss_feed_url={{ article.url }}" class="read-more-btn">
-                        Read More
-                    </a>
+                {% if article.image_url %}
+                    <img src="{{ article.image_url }}" alt="News Image" class="news-image" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23f8fafc\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'system-ui\' font-size=\'14\' fill=\'%2394a3b8\'%3ENo image available%3C/text%3E%3C/svg%3E';">
                 {% else %}
-                    <p style="color: rgb(213, 81, 81);">No RSS URL available</p>
+                    <div class="news-image placeholder">No image available</div>
                 {% endif %}
+                <div class="news-content">
+                    <h2 class="news-title">{{ article.title }}</h2>
+                    <p class="news-meta"><strong>Published at:</strong> {{ article.published_at }}</p>
+                    <p>{{ article.description }}</p>
+                    {% if article.url %}
+                        <a href="{% url 'fetch_extended_content' %}?rss_feed_url={{ article.url }}" class="read-more-btn">
+                            Read More
+                        </a>
+                    {% else %}
+                        <p style="color: rgb(213, 81, 81);">No RSS URL available</p>
+                    {% endif %}
+                </div>
             </div>
             {% endfor %}
         </div>
