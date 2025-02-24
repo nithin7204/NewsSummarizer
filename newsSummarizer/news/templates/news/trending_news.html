@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending News</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; }
+        .container { width: 80%; margin: auto; }
+        .news-card { background-color: white; padding: 20px; margin: 10px; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); }
+        .read-more { background-color: #007bff; color: white; padding: 8px 12px; text-decoration: none; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Trending News</h1>
+
+        {% if articles %}
+            {% for article in articles %}
+            <div class="news-card">
+                <h2>{{ article.title }}</h2>
+                <p><strong>Clicks:</strong> {{ article.trendingnews.clicks }}</p>
+                <a href="{% url 'fetch_extended_content' %}?rss_feed_url={{ article.url }}" class="read-more">Read More</a>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No trending news available.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
