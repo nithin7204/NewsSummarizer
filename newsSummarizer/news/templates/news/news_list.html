@@ -153,48 +153,39 @@
             border-radius: 2rem;
             font-size: 0.875rem;
             color: var(--text-color);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .topic-tag:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .topic-tag.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .news-card {
+            transition: all 0.3s ease;
+        }
+
+        .news-card.hidden {
+            display: none;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            background-color: var(--card-background);
+            border-radius: 1rem;
+            margin: 2rem 0;
+            display: none;
         }
     </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const countrySelector = document.getElementById("country-selector");
-            const currentCountry = "{{ selected_country }}";  // Pass from Django
-            
-            // Set the selected country when the page loads
-            if (currentCountry) {
-                countrySelector.value = currentCountry;
-            }
-    
-            countrySelector.addEventListener("change", function () {
-                const selectedCountry = this.value;
-                window.location.href = `?country=${selectedCountry}`;
-            });
-
-            // Theme toggle functionality
-            const themeToggle = document.getElementById('theme-toggle');
-            
-            // Check for saved theme preference or default to 'light'
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon(savedTheme);
-
-            themeToggle.addEventListener('click', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                updateThemeIcon(newTheme);
-            });
-
-            function updateThemeIcon(theme) {
-                themeToggle.innerHTML = theme === 'light' ? '🌙' : '☀️';
-                themeToggle.setAttribute('title', 
-                    theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'
-                );
-            }
-        });
-    </script>
 </head>
 <body>
     <button id="theme-toggle" class="theme-toggle" title="Switch to Dark Mode">
@@ -218,9 +209,10 @@
         <div class="trending-insights">
             <h3>📈 Trending Topics</h3>
             <div class="topic-tags">
-                <span class="topic-tag">#Technology</span>
-                <span class="topic-tag">#Politics</span>
-                <span class="topic-tag">#Science</span>
+                <button class="topic-tag" data-topic="technology">#Technology</button>
+                <button class="topic-tag" data-topic="politics">#Politics</button>
+                <button class="topic-tag" data-topic="science">#Science</button>
+                <button class="topic-tag active" data-topic="all">#All</button>
             </div>
         </div>
 
@@ -248,5 +240,32 @@
             {% endfor %}
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            
+            // Check for saved theme preference or default to 'light'
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+
+            function updateThemeIcon(theme) {
+                themeToggle.innerHTML = theme === 'light' ? '🌙' : '☀️';
+                themeToggle.setAttribute('title', 
+                    theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'
+                );
+            }
+        });
+    </script>
 </body>
 </html>

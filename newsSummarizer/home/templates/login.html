@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - News Summarizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f1f5f9;
+            --text-color: #1e293b;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 400px;
+            margin: 2rem;
+        }
+
+        h2 {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .error-text {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .alert {
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #64748b;
+        }
+
+        .signup-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        .password-input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1.2rem;
+        }
+
+        .password-toggle:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Welcome Back</h2>
+
+        {% if messages %}
+            <div class="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST" id="loginForm">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label class="form-label" for="id_username">Username</label>
+                <input type="text" id="id_username" name="username" class="form-control" value="{{ request.POST.username }}">
+                <small class="error-text" id="usernameError"></small>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="id_password">Password</label>
+                <div class="password-input-group">
+                    <input type="password" id="id_password" name="password" class="form-control">
+                    <button type="button" class="password-toggle" onclick="togglePassword('id_password', this)">
+                        👁️
+                    </button>
+                </div>
+                <small class="error-text" id="passwordError"></small>
+            </div>
+
+            <button type="submit" class="btn">Login</button>
+        </form>
+
+        <div class="signup-link">
+            Don't have an account? <a href="{% url 'signup' %}">Sign up here</a>
+        </div>
+    </div>
+
+    <!-- JavaScript Validation -->
+    <script>
+        $(document).ready(function() {
+            // Username Validation
+            $("#id_username").on("keyup", function() {
+                let username = $(this).val();
+                if (username.length < 3) {
+                    $("#usernameError").text("Username must be at least 3 characters.");
+                } else {
+                    $("#usernameError").text("");
+                }
+            });
+
+            // Password Validation
+            $("#id_password").on("keyup", function() {
+                let password = $(this).val();
+                if (password.length < 6) {
+                    $("#passwordError").text("Password must be at least 6 characters.");
+                } else {
+                    $("#passwordError").text("");
+                }
+            });
+
+            // Prevent Form Submission If There Are Errors
+            $("#loginForm").on("submit", function(event) {
+                if ($("#usernameError").text() || $("#passwordError").text()) {
+                    event.preventDefault();
+                }
+            });
+        });
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                button.textContent = "🔒";
+            } else {
+                input.type = "password";
+                button.textContent = "👁️";
+            }
+        }
+    </script>
+</body>
+</html>

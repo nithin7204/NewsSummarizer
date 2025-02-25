@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - News Summarizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f1f5f9;
+            --text-color: #1e293b;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .signup-container {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: var(--card-shadow);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 {
+            color: var(--text-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .error-text {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .alert {
+            background-color: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #dc2626;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #64748b;
+        }
+
+        .login-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .password-input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1.2rem;
+        }
+
+        .password-toggle:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <h2>Create Your Account</h2>
+
+        {% if messages %}
+            <div class="alert">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST" id="signupForm">
+            {% csrf_token %}
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label" for="id_first_name">First Name</label>
+                    <input type="text" id="id_first_name" name="first_name" class="form-control" value="{{ request.POST.first_name }}">
+                    <small class="error-text" id="firstNameError"></small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="id_last_name">Last Name</label>
+                    <input type="text" id="id_last_name" name="last_name" class="form-control" value="{{ request.POST.last_name }}">
+                    <small class="error-text" id="lastNameError"></small>
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label" for="id_email">Email</label>
+                    <input type="email" id="id_email" name="email" class="form-control" value="{{ request.POST.email }}">
+                    <small class="error-text" id="emailError"></small>
+                </div>
+
+                <div class="form-group full-width">
+                    <label class="form-label" for="id_username">Username</label>
+                    <input type="text" id="id_username" name="username" class="form-control" value="{{ request.POST.username }}">
+                    <small class="error-text" id="usernameError"></small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="id_password1">Password</label>
+                    <div class="password-input-group">
+                        <input type="password" id="id_password1" name="password1" class="form-control">
+                        <button type="button" class="password-toggle" onclick="togglePassword('id_password1', this)">
+                            👁️
+                        </button>
+                    </div>
+                    <small class="error-text" id="passwordError"></small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="id_password2">Confirm Password</label>
+                    <div class="password-input-group">
+                        <input type="password" id="id_password2" name="password2" class="form-control">
+                        <button type="button" class="password-toggle" onclick="togglePassword('id_password2', this)">
+                            👁️
+                        </button>
+                    </div>
+                    <small class="error-text" id="confirmPasswordError"></small>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">Create Account</button>
+        </form>
+
+        <div class="login-link">
+            Already have an account? <a href="{% url 'login' %}">Login here</a>
+        </div>
+    </div>
+
+    <!-- Keep your existing JavaScript validation -->
+    <script>
+        $(document).ready(function() {
+            // First Name Validation
+            $("#id_first_name").on("keyup", function() {
+                let firstName = $(this).val();
+                if (firstName.length < 2) {
+                    $("#firstNameError").text("First name must be at least 2 characters.");
+                } else {
+                    $("#firstNameError").text("");
+                }
+            });
+
+            // Last Name Validation
+            $("#id_last_name").on("keyup", function() {
+                let lastName = $(this).val();
+                if (lastName.length < 2) {
+                    $("#lastNameError").text("Last name must be at least 2 characters.");
+                } else {
+                    $("#lastNameError").text("");
+                }
+            });
+
+            // Email Validation
+            $("#id_email").on("keyup", function() {
+                let email = $(this).val();
+                let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    $("#emailError").text("Enter a valid email address.");
+                } else {
+                    $("#emailError").text("");
+                }
+            });
+
+            // Username Validation
+            $("#id_username").on("keyup", function() {
+                let username = $(this).val();
+                if (username.length < 3) {
+                    $("#usernameError").text("Username must be at least 3 characters.");
+                } else {
+                    $("#usernameError").text("");
+                }
+            });
+
+            // Password Validation
+            $("#id_password1").on("keyup", function() {
+                let password = $(this).val();
+                let username = $("#id_username").val();
+
+                if (password.length < 6) {
+                    $("#passwordError").text("Password must be at least 6 characters.");
+                } else if (password.toLowerCase().includes(username.toLowerCase())) {
+                    $("#passwordError").text("Password cannot be similar to username.");
+                } else {
+                    $("#passwordError").text(""); 
+                }
+            });
+
+            // Confirm Password Validation
+            $("#id_password2").on("keyup", function() {
+                let password = $("#id_password1").val();
+                let confirmPassword = $(this).val();
+
+                if (password !== confirmPassword) {
+                    $("#confirmPasswordError").text("Passwords do not match.");
+                } else {
+                    $("#confirmPasswordError").text("");
+                }
+            });
+
+            // Prevent Form Submission If There Are Errors
+            $("#signupForm").on("submit", function(event) {
+                if ($("#firstNameError").text() || $("#lastNameError").text() || $("#emailError").text() ||
+                    $("#usernameError").text() || $("#passwordError").text() || $("#confirmPasswordError").text()) {
+                    event.preventDefault(); 
+                }
+            });
+        });
+
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                button.textContent = "🔒";
+            } else {
+                input.type = "password";
+                button.textContent = "👁️";
+            }
+        }
+    </script>
+</body>
+</html>

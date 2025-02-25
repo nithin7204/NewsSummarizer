@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Summarizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f1f5f9;
+            --text-color: #1e293b;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            width: 100%;
+            box-shadow: var(--card-shadow);
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+        }
+
+        .feature-card h3 {
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Welcome to News Summarizer</h1>
+        <p>Stay informed with AI-powered news summaries. Get the essence of news articles in seconds.</p>
+        
+        {% if user.is_authenticated %}
+            <div class="auth-buttons">
+                <p>Hello, {{ user.username }}!</p>
+                <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+                <a href="{% url 'news_list' %}" class="btn btn-primary">View News</a>
+            </div>
+        {% else %}
+            <div class="auth-buttons">
+                <a href="{% url 'signup' %}" class="btn btn-primary">Sign Up</a>
+                <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="features">
+        <div class="feature-card">
+            <div class="feature-icon">🚀</div>
+            <h3>Quick Summaries</h3>
+            <p>Get concise summaries of news articles powered by advanced AI technology.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🌍</div>
+            <h3>Global Coverage</h3>
+            <p>Access news from multiple sources and regions around the world.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Real-time Updates</h3>
+            <p>Stay up-to-date with the latest news as it happens.</p>
+        </div>
+    </div>
+</body>
+</html>
