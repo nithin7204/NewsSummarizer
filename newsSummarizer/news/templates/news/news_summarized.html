@@ -99,7 +99,7 @@
         {% else %}
             <p>{{ full_content }}</p>
             <div class="summary-container">
-                <p>{{ summary | linebreaks }}</p>
+                <p>{% filter linebreaks %}{{ summary }}{% endfilter %}</p>
             </div>
         {% endif %}
 

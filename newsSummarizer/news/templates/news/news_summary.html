@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News Summary</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <meta name="theme-color" content="#2563eb">
     <style>
+        /* Modern CSS Reset and Variables */
         :root {
             --primary-color: #2563eb;
             --secondary-color: #1e40af;
@@ -19,6 +18,7 @@
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background-color: var(--background-color);
             color: var(--text-color);
+            line-height: 1.7;
             margin: 0;
             padding: 2rem;
             min-height: 100vh;
@@ -44,12 +44,30 @@
             text-align: center;
         }
 
-        p {
-            line-height: 1.8;
-            color: var(--text-color);
-            font-size: 1rem;
-            margin: 1rem 0;
-            overflow-wrap: break-word;
+        .summary-container {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border-left: 4px solid var(--primary-color);
+            margin: 2rem 0;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-1px);
         }
 
         .error {
@@ -58,61 +76,67 @@
             padding: 1rem;
             border-radius: 0.5rem;
             margin: 1rem 0;
-            font-weight: 500;
         }
 
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 1rem;
-        }
-
-        .btn:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-1px);
-        }
-
-        .summary-container {
-            background-color: #f8fafc;
-            padding: 1.5rem;
-            border-radius: 0.75rem;
-            border-left: 4px solid var(--primary-color);
-            margin: 2rem 0;
-        }
-
-        .summary-title {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
+        .like-btn {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
         }
 
-        .summary-text {
-            color: var(--text-color);
-            line-height: 1.8;
+        .like-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .comments-section {
+            margin-top: 2rem;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid #ddd;
+            margin-top: 0.5rem;
             font-size: 1rem;
         }
 
-        .back-btn {
-            background-color: #10b981;
-            margin-top: 1.5rem;
+        .comment-form button {
+            margin-top: 0.75rem;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
         }
 
-        .back-btn:hover {
-            background-color: #059669;
+        .comment-form button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .comments-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+        }
+
+        .comments-list li {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+            border-left: 4px solid var(--primary-color);
         }
 
         @media (max-width: 640px) {
@@ -123,37 +147,96 @@
             .container {
                 padding: 1.5rem;
             }
-
-            h1 {
-                font-size: 1.5rem;
-            }
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>News Article</h1>
+        <h1>News Summary</h1>
 
         {% if error %}
             <p class="error">{{ error }}</p>
         {% else %}
-            {% if summary %}
-                <div class="summary-container">
-                    <p class="summary-title">🔍 Summarized News</p>
-                    <p class="summary-text">{{ summary }}</p>
-                </div>
-            {% else %}
-                <p>{{ full_content | linebreaks }}</p>
+        <p>{% filter linebreaks %}{{ full_content }}{% endfilter %}</p>
 
-                <form method="get">
-                    <input type="hidden" name="rss_feed_url" value="{{ rss_feed_url }}">
-                    <input type="hidden" name="summarize" value="true">
-                    <button type="submit" class="btn">✨ Summarize</button>
+            <!-- Like Button -->
+            <button class="like-btn" id="like-btn" data-article-id="{{ article.id }}">
+                👍 Like (<span id="like-count">{{ article.like_set.count }}</span>)
+            </button>
+
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <h3>Comments</h3>
+                <ul class="comments-list" id="comments-list">
+                    {% for comment in article.comment_set.all %}
+                        <li><strong>{{ comment.user.username }}</strong>: {{ comment.text }} <em>({{ comment.timestamp }})</em></li>
+                    {% endfor %}
+                </ul>
+
+                <!-- Add Comment Form -->
+                <form class="comment-form" id="comment-form" action="{% url 'news_comment' article.id %}" method="POST">
+                    {% csrf_token %}
+                    <textarea id="comment-text" name="text" placeholder="Write a comment..." required></textarea>
+                    <button type="submit">Post Comment</button>
                 </form>
-            {% endif %}
+            </div>
+            <form action="{% url 'fetch_extended_content' %}" method="GET">
+                <input type="hidden" name="rss_feed_url" value="{{ rss_feed_url }}">
+                <input type="hidden" name="summarize" value="true">
+                <button type="submit" class="like-btn">📝 Summarize</button>
+            </form>            
         {% endif %}
 
-        <a href="{% url 'news_list' %}" class="btn back-btn">🔙 Back to News</a>
+        <a href="{% url 'news_list' %}" class="back-btn">🔙 Back to News</a>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const likeBtn = document.getElementById("like-btn");
+            const commentForm = document.getElementById("comment-form");
+
+            // Handle Like Button
+            likeBtn.addEventListener("click", function () {
+                const articleId = likeBtn.getAttribute("data-article-id");
+
+                fetch(`{% url 'news_like' article.id %}`, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": document.querySelector("input[name='csrfmiddlewaretoken']").value,
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("like-count").innerText = data.likes_count;
+                    likeBtn.innerHTML = `👍 Liked (<span id="like-count">${data.likes_count}</span>)`;
+                });
+            });
+
+            // Handle Comment Submission
+            commentForm.addEventListener("submit", function (event) {
+                event.preventDefault();
+                const commentText = document.getElementById("comment-text").value;
+
+                fetch(commentForm.action, {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": document.querySelector("input[name='csrfmiddlewaretoken']").value,
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ text: commentText }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const newComment = document.createElement("li");
+                    newComment.innerHTML = `<strong>${data.user}</strong>: ${data.text} <em>(${data.timestamp})</em>`;
+                    document.getElementById("comments-list").prepend(newComment);
+                    document.getElementById("comment-text").value = "";  
+                });
+            });
+        });
+    </script>
+
 </body>
 </html>

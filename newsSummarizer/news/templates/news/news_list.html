@@ -240,32 +240,9 @@
             {% endfor %}
         </div>
     </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const themeToggle = document.getElementById('theme-toggle');
-            
-            // Check for saved theme preference or default to 'light'
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-            updateThemeIcon(savedTheme);
-
-            themeToggle.addEventListener('click', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                updateThemeIcon(newTheme);
-            });
-
-            function updateThemeIcon(theme) {
-                themeToggle.innerHTML = theme === 'light' ? '🌙' : '☀️';
-                themeToggle.setAttribute('title', 
-                    theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'
-                );
-            }
-        });
-    </script>
+    <div class="no-results">
+        <h3>No articles found for this topic</h3>
+        <p>Try selecting a different topic or check back later.</p>
+    </div>
 </body>
 </html>

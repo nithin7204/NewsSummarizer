@@ -55,7 +55,7 @@ def summarize_content(text):
         words = text.split()[:500]  # Keep only the first 500 words
         clean_text = " ".join(words)
 
-        model = genai.GenerativeModel("gemini-pro")
+        model = genai.GenerativeModel("models/gemini-1.5-pro")
         response = model.generate_content(
             f"""
             You are an AI assistant designed to summarize news articles in a **concise, neutral, and professional manner**.
